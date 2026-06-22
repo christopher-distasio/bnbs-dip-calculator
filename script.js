@@ -8,31 +8,57 @@ let state = {
 // ACCOUNT TYPE HANDLER
 function handleAccountType(type) {
   state.accountType = type;
+  const continueBtn = document.getElementById('continue-btn');
+  
+  // Show and enable the Continue button
+  continueBtn.style.display = 'inline-block';
+  continueBtn.disabled = false;
+}
+
+// CONTINUE FROM ACCOUNT TYPE
+function continueFromAccountType() {
+  const accountType = state.accountType;
   const levelContainer = document.getElementById('level-container');
   const unsureMessage = document.getElementById('unsure-message');
 
-  if (type === 'unsure') {
+  if (accountType === 'unsure') {
     levelContainer.style.display = 'none';
     unsureMessage.style.display = 'block';
     document.getElementById('result-card').style.display = 'none';
+    // Scroll to explanations
+    document.querySelector('.explanation-section').scrollIntoView({ behavior: 'smooth' });
   } else {
     levelContainer.style.display = 'block';
     unsureMessage.style.display = 'none';
+    // Scroll to level selection
+    document.getElementById('q1-container').scrollIntoView({ behavior: 'smooth' });
   }
 }
 
 // LEVEL HANDLER
 function handleLevel(level) {
   state.level = level;
+  const levelContinueBtn = document.getElementById('level-continue-btn');
+  
+  // Show and enable the Continue button
+  levelContinueBtn.style.display = 'inline-block';
+  levelContinueBtn.disabled = false;
+}
+
+// CONTINUE FROM LEVEL
+function continueFromLevel() {
+  const level = state.level;
   const beginnerPath = document.getElementById('beginner-path');
   const experiencedPath = document.getElementById('experienced-path');
 
   if (level === 'beginner') {
     beginnerPath.style.display = 'block';
     experiencedPath.style.display = 'none';
+    document.getElementById('q2-beginner').scrollIntoView({ behavior: 'smooth' });
   } else {
     beginnerPath.style.display = 'none';
     experiencedPath.style.display = 'block';
+    document.getElementById('q2-exp').scrollIntoView({ behavior: 'smooth' });
   }
 }
 

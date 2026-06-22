@@ -4,6 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>How Much Should I Spend? - Tranche Calculator</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#185FA5">
+  <meta name="description" content="A simple guide to sizing your next stock purchase when the market dips. Educational framework for position sizing.">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect fill='%23185FA5' width='192' height='192'/><text x='96' y='110' font-size='80' font-weight='bold' fill='white' text-anchor='middle' font-family='Georgia, serif'>$</text></svg>">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -51,6 +55,7 @@
             <span>I'm not sure yet</span>
           </label>
         </div>
+        <button id="continue-btn" class="continue-button" onclick="continueFromAccountType()" style="margin-top: 1.5rem; display: none;" disabled>Continue</button>
       </div>
 
       <div id="level-container" style="display: none;">
@@ -66,6 +71,7 @@
               <span>Experienced (I know what I'm doing)</span>
             </label>
           </div>
+          <button id="level-continue-btn" class="continue-button" onclick="continueFromLevel()" style="margin-top: 1.5rem; display: none;" disabled>Continue</button>
         </div>
 
         <div id="beginner-path" style="display: none;">
@@ -295,5 +301,20 @@
   </div>
 
   <script src="script.js"></script>
+
+  <script>
+    // Register service worker for PWA functionality
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('service-worker.js')
+          .then(registration => {
+            console.log('Service Worker registered successfully:', registration);
+          })
+          .catch(err => {
+            console.log('Service Worker registration failed:', err);
+          });
+      });
+    }
+  </script>
 </body>
 </html>
