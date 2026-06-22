@@ -1,49 +1,19 @@
 {
-  "name": "How much should I spend? - Tranche Calculator",
-  "short_name": "Tranche Calculator",
-  "description": "A simple guide to sizing your next stock purchase when the market dips. Educational framework for position sizing.",
+  "name": "BNBS Dip Calculator",
+  "short_name": "Dip Calculator",
+  "description": "Bulls Not BS framework for sizing your next stock purchase when the market dips.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait-primary",
   "background_color": "#FFFFFF",
-  "theme_color": "#185FA5",
+  "theme_color": "#8B3A3A",
   "icons": [
     {
-      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect fill='%23185FA5' width='192' height='192'/><text x='96' y='110' font-size='80' font-weight='bold' fill='white' text-anchor='middle' font-family='Georgia, serif'>$</text></svg>",
-      "sizes": "192x192",
-      "type": "image/svg+xml",
-      "purpose": "any"
-    },
-    {
-      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect fill='%23185FA5' width='512' height='512'/><text x='256' y='290' font-size='220' font-weight='bold' fill='white' text-anchor='middle' font-family='Georgia, serif'>$</text></svg>",
-      "sizes": "512x512",
-      "type": "image/svg+xml",
+      "src": "logo.png",
+      "sizes": "691x691",
+      "type": "image/png",
       "purpose": "any maskable"
-    }
-  ],
-  "screenshots": [
-    {
-      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 540 720'><rect fill='%23F1EFE8' width='540' height='720'/><rect fill='white' y='60' width='540' height='600'/><text x='270' y='120' font-size='32' font-weight='bold' text-anchor='middle' font-family='Georgia'>How much should I spend?</text></svg>",
-      "sizes": "540x720",
-      "type": "image/svg+xml",
-      "form_factor": "narrow"
-    }
-  ],
-  "categories": ["finance", "productivity"],
-  "shortcuts": [
-    {
-      "name": "Start Calculator",
-      "short_name": "Calculate",
-      "description": "Open the tranche calculator",
-      "url": "/?start=calculator",
-      "icons": [
-        {
-          "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'><rect fill='%23185FA5' width='96' height='96'/><text x='48' y='55' font-size='40' font-weight='bold' fill='white' text-anchor='middle' font-family='Georgia'>$</text></svg>",
-          "sizes": "96x96",
-          "type": "image/svg+xml"
-        }
-      ]
     }
   ]
 }

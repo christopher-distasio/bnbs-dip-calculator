@@ -1,222 +1,112 @@
-// STATE
-let state = {
-  accountType: null,
-  level: null,
-  exceptions: { 1: false, 2: false, 3: false, 4: false, 5: false, 6: false }
-};
+let state = { accountType: null, level: null };
 
-// ACCOUNT TYPE HANDLER
-function handleAccountType(type) {
+function setAccountType(type) {
   state.accountType = type;
-  const continueBtn = document.getElementById('continue-btn');
+  const levelSection = document.getElementById('level-section');
+  const unsureMsg = document.getElementById('unsure-message');
   
-  // Show and enable the Continue button
-  continueBtn.style.display = 'inline-block';
-  continueBtn.disabled = false;
-}
-
-// CONTINUE FROM ACCOUNT TYPE
-function continueFromAccountType() {
-  const accountType = state.accountType;
-  const levelContainer = document.getElementById('level-container');
-  const unsureMessage = document.getElementById('unsure-message');
-
-  if (accountType === 'unsure') {
-    levelContainer.style.display = 'none';
-    unsureMessage.style.display = 'block';
-    document.getElementById('result-card').style.display = 'none';
-    // Scroll to explanations
-    document.querySelector('.explanation-section').scrollIntoView({ behavior: 'smooth' });
+  if (type === 'unsure') {
+    levelSection.style.display = 'none';
+    unsureMsg.style.display = 'block';
   } else {
-    levelContainer.style.display = 'block';
-    unsureMessage.style.display = 'none';
-    // Scroll to level selection
-    document.getElementById('q1-container').scrollIntoView({ behavior: 'smooth' });
+    levelSection.style.display = 'block';
+    unsureMsg.style.display = 'none';
   }
 }
 
-// LEVEL HANDLER
-function handleLevel(level) {
+function setLevel(level) {
   state.level = level;
-  const levelContinueBtn = document.getElementById('level-continue-btn');
+  const beginnerQ = document.getElementById('beginner-questions');
+  const experiencedQ = document.getElementById('experienced-questions');
   
-  // Show and enable the Continue button
-  levelContinueBtn.style.display = 'inline-block';
-  levelContinueBtn.disabled = false;
-}
-
-// CONTINUE FROM LEVEL
-function continueFromLevel() {
-  const level = state.level;
-  const beginnerPath = document.getElementById('beginner-path');
-  const experiencedPath = document.getElementById('experienced-path');
-
   if (level === 'beginner') {
-    beginnerPath.style.display = 'block';
-    experiencedPath.style.display = 'none';
-    document.getElementById('q2-beginner').scrollIntoView({ behavior: 'smooth' });
+    beginnerQ.style.display = 'block';
+    experiencedQ.style.display = 'none';
   } else {
-    beginnerPath.style.display = 'none';
-    experiencedPath.style.display = 'block';
-    document.getElementById('q2-exp').scrollIntoView({ behavior: 'smooth' });
+    beginnerQ.style.display = 'none';
+    experiencedQ.style.display = 'block';
   }
 }
 
-// STOCK COUNT HANDLER (BEGINNER)
-function handleStockCount() {
+function updateStockCount() {
   const count = parseInt(document.getElementById('stock-count').value) || 0;
   const guidance = document.getElementById('stock-count-guidance');
-
   let message = '';
-  if (count === 0) {
-    message = 'You're starting from scratch—that's exciting. For this calculator, let's assume you're building your first position. You can always adjust the numbers once you own more stocks.';
-  } else if (count === 1) {
-    message = 'You're in the building phase. Adding 1–2 more quality ideas is smart. Avoid spreading yourself thin.';
-  } else if (count === 2 || count === 3) {
-    message = 'Good foundation. At this stage, depth of knowledge matters more than breadth. Make sure you truly understand each thesis.';
-  } else if (count >= 5) {
-    message = 'You're managing a diversified portfolio. Before adding more, consider: Can I track all of these equally well?';
-  }
-
-  guidance.innerHTML = `<p>${message}</p>`;
-  updateBeginner();
-}
-
-// BEGINNER CALCULATION
-function updateBeginner() {
-  const stockName = document.getElementById('stock-name').value.toUpperCase() || 'Position';
-  const availableMoney = parseFloat(document.getElementById('available-money').value) || 0;
-  const dipPercent = parseFloat(document.getElementById('dip-percent-beginner').value) || 0;
-  const maxPosition = parseFloat(document.getElementById('max-position-beginner').value) || 0;
-  const positionType = document.querySelector('input[name="position-type"]:checked')?.value;
-
-  if (availableMoney <= 0 || dipPercent <= 0 || maxPosition <= 0 || !positionType) {
-    document.getElementById('result-card').style.display = 'none';
-    return;
-  }
-
-  // FORMULA: Dip % × Available Money
-  const rawTranche = (dipPercent / 100) * availableMoney;
-  const maxTrancheCap = 0.20 * maxPosition; // 20% of max position
-  const finalTranche = Math.min(rawTranche, maxTrancheCap);
-
-  // Show result
-  document.getElementById('result-card').style.display = 'block';
-
-  let verdict = '';
-  let detail = '';
-  let className = 'success';
-
-  if (finalTranche > maxPosition) {
-    // Would exceed max
-    verdict = `Skip this dip`;
-    detail = `Adding $${Math.round(finalTranche)} would exceed your $${Math.round(maxPosition)} max position. Stay disciplined.`;
-    className = 'danger';
-  } else {
-    // Green light
-    if (state.accountType === 'practice') {
-      verdict = `In this scenario, add $${Math.round(finalTranche)}`;
-      detail = `${dipPercent}% dip × $${Math.round(availableMoney)} available = $${Math.round(finalTranche)}. This is how you'd size it with real money.`;
-    } else {
-      verdict = `Add $${Math.round(finalTranche)}`;
-      detail = `${dipPercent}% dip × $${Math.round(availableMoney)} available = $${Math.round(finalTranche)}. Thesis intact, dip confirmed macro-only, ready to execute.`;
-    }
-    className = 'success';
-  }
-
-  const resultText = document.getElementById('result-text');
-  resultText.textContent = verdict;
-  resultText.className = `result-verdict ${className}`;
-  document.getElementById('result-detail').textContent = detail;
-}
-
-// EXPERIENCED CALCULATION
-function updateExperienced() {
-  const stockName = document.getElementById('stock-name-exp').value.toUpperCase() || 'Position';
-  const costBasis = parseFloat(document.getElementById('cost-basis-exp').value) || 0;
-  const dipPercent = parseFloat(document.getElementById('dip-percent-exp').value) || 0;
-  const dryPowder = parseFloat(document.getElementById('dry-powder-exp').value) || 0;
-  const maxPosition = parseFloat(document.getElementById('max-position-exp').value) || 0;
-
-  if (costBasis <= 0 || dipPercent <= 0 || dryPowder <= 0 || maxPosition <= 0) {
-    document.getElementById('result-card').style.display = 'none';
-    return;
-  }
-
-  // FORMULA: Dip % × Cost Basis
-  const rawTranche = (dipPercent / 100) * costBasis;
-  const maxTrancheCap = 0.20 * costBasis; // 20% of cost basis
-  const finalTranche = Math.min(rawTranche, maxTrancheCap);
-  const postExecutionCost = costBasis + finalTranche;
-  const dryPowderAfter = dryPowder - finalTranche;
-  const dryPowderPercent = (dryPowderAfter / (dryPowder + costBasis + finalTranche)) * 100;
-
-  // Show result
-  document.getElementById('result-card').style.display = 'block';
-
-  let verdict = '';
-  let detail = '';
-  let className = 'success';
-
-  const anyException = Object.values(state.exceptions).some(v => v);
-
-  if (postExecutionCost > maxPosition) {
-    // Tier ceiling exceeded
-    verdict = `Skip this dip`;
-    detail = `Position would hit $${Math.round(postExecutionCost)} (above $${Math.round(maxPosition)} max). Tier ceiling exceeded.`;
-    className = 'danger';
-  } else if (dryPowderAfter < dryPowder * 0.10) {
-    // Would drop below 10% dry powder
-    verdict = `Skip this dip`;
-    detail = `Dry powder would drop to $${Math.round(dryPowderAfter)} (${Math.round(dryPowderPercent)}%). Stay above 10% minimum.`;
-    className = 'danger';
-  } else if (anyException) {
-    // Exceptions triggered
-    verdict = `Add $${Math.round(finalTranche)} (review exceptions)`;
-    detail = `One or more exceptions triggered. Review them before executing. Thesis, valuation, and conviction intact but conditions warrant review.`;
-    className = 'warning';
-  } else {
-    // Green light
-    if (state.accountType === 'practice') {
-      verdict = `In this scenario, add $${Math.round(finalTranche)}`;
-      detail = `${dipPercent}% dip × $${Math.round(costBasis)} cost basis = $${Math.round(finalTranche)}. Execution-ready framework. (Dry powder after: $${Math.round(dryPowderAfter)})`;
-    } else {
-      verdict = `Add $${Math.round(finalTranche)}`;
-      detail = `Thesis intact, dip confirmed macro-only, headroom available. ${dipPercent}% dip × $${Math.round(costBasis)} = execution-ready. (Dry powder after: $${Math.round(dryPowderAfter)})`;
-    }
-    className = 'success';
-  }
-
-  const resultText = document.getElementById('result-text');
-  resultText.textContent = verdict;
-  resultText.className = `result-verdict ${className}`;
-  document.getElementById('result-detail').textContent = detail;
-}
-
-// EXCEPTION TOGGLE
-function toggleException(num) {
-  state.exceptions[num] = !state.exceptions[num];
-  const btn = document.querySelector(`button[onclick="toggleException(${num})"]`);
   
-  if (state.exceptions[num]) {
-    btn.textContent = 'Yes';
-    btn.classList.add('yes');
-  } else {
-    btn.textContent = 'No';
-    btn.classList.remove('yes');
+  if (count === 0) {
+    message = 'You\'re starting from scratch. For this calculator, assume you\'re building your first position.';
+  } else if (count === 1) {
+    message = 'You\'re in the building phase. Adding 1–2 more quality ideas is smart.';
+  } else if (count === 2 || count === 3) {
+    message = 'Good foundation. Make sure you understand each thesis deeply.';
+  } else if (count >= 5) {
+    message = 'You\'re managing a diversified portfolio. Before adding more, can you track all of these equally well?';
   }
-
-  updateExperienced();
+  
+  guidance.innerHTML = `<p>${message}</p>`;
+  updateCalc();
 }
 
-// SCROLL TO CALCULATOR SMOOTH
+function updateCalc() {
+  if (state.level === 'beginner') {
+    calcBeginner();
+  } else if (state.level === 'experienced') {
+    calcExperienced();
+  }
+}
+
+function calcBeginner() {
+  const available = parseFloat(document.getElementById('available-money').value) || 0;
+  const dip = parseFloat(document.getElementById('dip-percent-beginner').value) || 0;
+  const max = parseFloat(document.getElementById('max-position-beginner').value) || 0;
+  const posType = document.querySelector('input[name="position-type"]:checked')?.value;
+  
+  if (available <= 0 || dip <= 0 || max <= 0 || !posType) return;
+  
+  const tranche = Math.min((dip / 100) * available, 0.20 * max);
+  const resultCard = document.getElementById('result-card');
+  const resultText = document.getElementById('result-text');
+  const resultDetail = document.getElementById('result-detail');
+  
+  resultCard.style.display = 'block';
+  resultText.textContent = `Add $${Math.round(tranche)}`;
+  resultText.className = 'result-verdict success';
+  resultDetail.textContent = `${dip}% dip × $${Math.round(available)} available = $${Math.round(tranche)}`;
+}
+
+function calcExperienced() {
+  const cost = parseFloat(document.getElementById('cost-basis-exp').value) || 0;
+  const dip = parseFloat(document.getElementById('dip-percent-exp').value) || 0;
+  const dry = parseFloat(document.getElementById('dry-powder-exp').value) || 0;
+  const max = parseFloat(document.getElementById('max-position-exp').value) || 0;
+  
+  if (cost <= 0 || dip <= 0 || dry <= 0 || max <= 0) return;
+  
+  const tranche = Math.min((dip / 100) * cost, 0.20 * cost);
+  const afterCost = cost + tranche;
+  const resultCard = document.getElementById('result-card');
+  const resultText = document.getElementById('result-text');
+  const resultDetail = document.getElementById('result-detail');
+  
+  resultCard.style.display = 'block';
+  
+  if (afterCost > max) {
+    resultText.textContent = 'Skip this dip';
+    resultText.className = 'result-verdict danger';
+    resultDetail.textContent = `Position would hit $${Math.round(afterCost)} (above $${Math.round(max)} max)`;
+  } else {
+    resultText.textContent = `Add $${Math.round(tranche)}`;
+    resultText.className = 'result-verdict success';
+    resultDetail.textContent = `${dip}% dip × $${Math.round(cost)} = $${Math.round(tranche)}`;
+  }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
-  const ctaButton = document.querySelector('.cta-button');
-  if (ctaButton) {
-    ctaButton.addEventListener('click', (e) => {
+  const cta = document.querySelector('.cta-button');
+  if (cta) {
+    cta.addEventListener('click', (e) => {
       e.preventDefault();
-      const calculator = document.getElementById('calculator');
-      calculator.scrollIntoView({ behavior: 'smooth' });
+      document.getElementById('calculator').scrollIntoView({ behavior: 'smooth' });
     });
   }
 });

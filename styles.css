@@ -56,6 +56,15 @@ body {
   line-height: 1.2;
 }
 
+.hero-brand {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-primary-red);
+  letter-spacing: 1px;
+  margin: 0 0 0.5rem 0;
+  text-transform: uppercase;
+}
+
 .hero-subtitle {
   font-size: 1.1rem;
   color: var(--color-primary-blue);
