@@ -101,12 +101,19 @@ function calcExperienced() {
   }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  const cta = document.querySelector('.cta-button');
-  if (cta) {
-    cta.addEventListener('click', (e) => {
-      e.preventDefault();
-      document.getElementById('calculator').scrollIntoView({ behavior: 'smooth' });
-    });
+// START CALCULATOR BUTTON
+function startCalculator() {
+  const calcSection = document.getElementById('calculator');
+  const calcContent = document.getElementById('calculator-content');
+  if (calcContent) {
+    calcContent.style.display = 'block';
   }
+  if (calcSection) {
+    setTimeout(() => calcSection.scrollIntoView({ behavior: 'smooth' }), 100);
+  }
+}
+
+// SCROLL TO CALCULATOR SMOOTH
+document.addEventListener('DOMContentLoaded', () => {
+  // Any other initialization if needed
 });

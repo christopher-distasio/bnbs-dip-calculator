@@ -48,7 +48,7 @@ body {
 }
 
 .hero-content h1 {
-  font-family: Georgia, 'Times New Roman', serif;
+  font-family: Arial, sans-serif;
   font-size: 2.5rem;
   font-weight: 400;
   color: var(--color-text-primary);
@@ -114,9 +114,13 @@ body {
 }
 
 .hero-illustration svg {
+  display: none;
+}
+
+.hero-logo {
   width: 100%;
   height: auto;
-  max-width: 200px;
+  max-width: 250px;
 }
 
 @media (max-width: 768px) {
@@ -140,7 +144,7 @@ body {
 }
 
 .calculator-section h2 {
-  font-family: Georgia, 'Times New Roman', serif;
+  font-family: Arial, sans-serif;
   font-size: 1.8rem;
   font-weight: 400;
   color: var(--color-text-primary);
@@ -162,7 +166,7 @@ body {
 }
 
 .question-block h3 {
-  font-family: Georgia, 'Times New Roman', serif;
+  font-family: Arial, sans-serif;
   font-size: 1.3rem;
   font-weight: 400;
   color: var(--color-text-primary);
@@ -358,7 +362,7 @@ body {
 }
 
 .result-verdict {
-  font-family: Georgia, 'Times New Roman', serif;
+  font-family: Arial, sans-serif;
   font-size: 2rem;
   font-weight: 400;
   margin-bottom: 1rem;
@@ -403,7 +407,7 @@ body {
 }
 
 .explanation-section h2 {
-  font-family: Georgia, 'Times New Roman', serif;
+  font-family: Arial, sans-serif;
   font-size: 1.8rem;
   font-weight: 400;
   color: var(--color-text-primary);
@@ -421,7 +425,7 @@ body {
 }
 
 .explanation-box h3 {
-  font-family: Georgia, 'Times New Roman', serif;
+  font-family: Arial, sans-serif;
   font-size: 1.25rem;
   font-weight: 400;
   color: var(--color-text-primary);
