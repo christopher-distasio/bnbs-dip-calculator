@@ -3,195 +3,495 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>How Much Should I Spend? - Tranche Calculator</title>
+  <title>BNBS Dip Calculator</title>
   <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#185FA5">
-  <meta name="description" content="A simple guide to sizing your next stock purchase when the market dips.">
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect fill='%23185FA5' width='192' height='192'/><text x='96' y='110' font-size='80' font-weight='bold' fill='white' text-anchor='middle' font-family='Georgia, serif'>$</text></svg>">
+  <meta name="theme-color" content="#8B3A3A">
+  <meta name="description" content="Bulls Not BS framework for sizing your next stock purchase when the market dips.">
+  <link rel="icon" type="image/png" href="logo.png">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div class="container">
+    <!-- HERO SECTION -->
     <section class="hero">
       <div class="hero-content">
         <p class="hero-brand">Bulls Not BS</p>
         <h1>Dip Calculator</h1>
         <p class="hero-subtitle">Size your next stock purchase when the market dips.</p>
-        <p class="hero-description">When a stock you own drops in price, it's often a good buying opportunity. But how much should you actually buy? This calculator helps you size each purchase based on how far the stock fell, how much money you have, and how many stocks you already own.</p>
-        <button class="cta-button" onclick="startCalculator()">Start the calculator</button>
+        <ul class="hero-bullets">
+          <li>Determine the right amount to buy based on the dip percentage</li>
+          <li>Check if it's actually a good time (not just cheap)</li>
+          <li>Stay disciplined with your cash allocation</li>
+        </ul>
       </div>
       <div class="hero-illustration">
         <img src="logo.png" alt="Bulls Not BS" class="hero-logo">
       </div>
     </section>
 
+    <!-- TOP NAVIGATION LINKS -->
+    <section class="nav-links">
+      <button class="nav-link-btn" onclick="openExceptions()">Check this first</button>
+      <button class="nav-link-btn" onclick="openHowItWorks()">How it works</button>
+    </section>
+
+    <!-- START CALCULATOR BUTTON -->
+    <div class="start-button-section">
+      <button class="cta-button" onclick="startCalculator()">Start the calculator</button>
+    </div>
+
+    <!-- EXCEPTIONS MODAL -->
+    <div id="exceptions-modal" class="modal" style="display: none;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Before you buy the dip: Check these first</h2>
+          <button class="modal-close" onclick="closeExceptions()">&times;</button>
+        </div>
+        <p class="exceptions-intro">Answer YES or NO for each. YES means you're good to go. NO means you should pause and think.</p>
+        
+        <div class="exceptions-flow">
+
+          <!-- Exception 1: Earnings within 5 days -->
+          <div class="exception-item" data-exception="1">
+            <p class="exception-question">Are there NO earnings reports within the next 5 days?</p>
+            <p class="exception-subtext"><em>Quick check: Search "[TICKER] earnings date" or check MarketWatch, Yahoo Finance, or your brokerage app. Takes 30 seconds.</em></p>
+            <div class="exception-buttons">
+              <button class="btn-yes" onclick="answerException(1, true)">YES</button>
+              <button class="btn-no" onclick="answerException(1, false)">NO</button>
+            </div>
+            <p class="exception-explanation" style="display: none;">Earnings can surprise. Either wait until after the call, or buy a smaller amount now and save room to buy more after you hear the guidance.</p>
+            <div class="exception-status"></div>
+          </div>
+
+          <!-- Exception 2: Conviction intact -->
+          <div class="exception-item" data-exception="2">
+            <p class="exception-question">Is your conviction (confidence) in the company's worthiness still intact? <a href="#" onclick="openConfidenceCheck(event)" class="dry-powder-link">Check your confidence</a></p>
+            <div class="exception-buttons">
+              <button class="btn-yes" onclick="answerException(2, true)">YES</button>
+              <button class="btn-no" onclick="answerException(2, false)">NO</button>
+            </div>
+            <p class="exception-explanation" style="display: none;">If the dip shook your conviction, that's a warning. A low price is only a buying opportunity if the business fundamentals are still solid.</p>
+            <div class="exception-status"></div>
+          </div>
+
+          <!-- Exception 3: No insider selling -->
+          <div class="exception-item" data-exception="3">
+            <p class="exception-question">Are insiders NOT selling right now?</p>
+            <div class="exception-buttons">
+              <button class="btn-yes" onclick="answerException(3, true)">YES</button>
+              <button class="btn-no" onclick="answerException(3, false)">NO</button>
+            </div>
+            <p class="exception-explanation" style="display: none;">Check insider trading activity in your brokerage app or SEC filings. If company insiders are selling, that's a red flag. Wait until insider selling stops before buying.</p>
+            <div class="exception-status"></div>
+          </div>
+
+          <!-- Exception 4: Not overbuying this month -->
+          <div class="exception-item" data-exception="4">
+            <p class="exception-question">Have you bought this stock fewer than 4 times this month?</p>
+            <div class="exception-buttons">
+              <button class="btn-yes" onclick="answerException(4, true)">YES</button>
+              <button class="btn-no" onclick="answerException(4, false)">NO</button>
+            </div>
+            <p class="exception-explanation" style="display: none;">Pace yourself. Buying too frequently can lead to averaging into a bad position or chasing momentum instead of following your framework. Space purchases across different weeks or months.</p>
+            <div class="exception-status"></div>
+          </div>
+
+          <!-- Exception 5: Cash floor protected -->
+          <div class="exception-item" data-exception="5">
+            <p class="exception-question">Will this purchase keep your cash above 10%? <a href="#" onclick="openDryPowderInfo(event)" class="dry-powder-link">Dry Powder Best Practices</a></p>
+            <div class="exception-buttons">
+              <button class="btn-yes" onclick="answerException(5, true)">YES</button>
+              <button class="btn-no" onclick="answerException(5, false)">NO</button>
+            </div>
+            <p class="exception-explanation" style="display: none;">Keep at least 10% of your investable money in cash at all times. Good dips happen several times a year. Never drop below 5% cash, and 10% is safer.</p>
+            <div class="exception-status"></div>
+          </div>
+
+          <!-- Exception 6: Deworsification check -->
+          <div class="exception-item" data-exception="6">
+            <p class="exception-question">Are you NOT creating deworsification by adding to this position? <a href="#" onclick="openDeworsificationInfo(event)" class="dry-powder-link">Learn about deworsification</a></p>
+            <div class="exception-buttons">
+              <button class="btn-yes" onclick="answerException(6, true)">YES</button>
+              <button class="btn-no" onclick="answerException(6, false)">NO</button>
+            </div>
+            <p class="exception-explanation" style="display: none;">Stick to your framework tiers: Core positions 15–25%, Satellites 5–10%. Don't let a dip tranche turn a solid position into a bloated one. Quality over quantity.</p>
+            <div class="exception-status"></div>
+          </div>
+
+          <!-- NEW: Timing section -->
+          <div class="exception-item timing-section">
+            <h3>Timing: When to actually pull the trigger</h3>
+            <p class="timing-text"><strong>Don't buy at market open (9:30 AM ET).</strong> That's when panic selling and emotional decisions happen. Instead, buy in the mid-to-late afternoon (2–3 PM ET / 1–2 PM CDT).</p>
+            <p class="timing-text"><strong>Why afternoon is better:</strong></p>
+            <ul class="timing-list">
+              <li>Initial panic is exhausted</li>
+              <li>Volatility has settled</li>
+              <li>Professional buyers are stepping in (better execution)</li>
+              <li>You have ALL the information (no surprise news dropping at 4 PM)</li>
+              <li>Bid-ask spreads are tighter (fills are cleaner)</li>
+            </ul>
+          </div>
+
+        </div>
+
+        <div class="exceptions-verdict">
+          <div id="verdict" class="verdict-text"></div>
+        </div>
+
+        <button class="back-button" onclick="closeExceptions()">Back to Calculator</button>
+      </div>
+    </div>
+
+    <!-- HOW IT WORKS MODAL -->
+    <div id="how-it-works-modal" class="modal" style="display: none;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>How it works</h2>
+          <button class="modal-close" onclick="closeHowItWorks()">&times;</button>
+        </div>
+
+        <div class="explanation-box">
+          <h3>Step 1: Understand your position conviction tiers</h3>
+          <p>Not all stocks get the same percentage of your portfolio. The framework adapts to your experience level and available capital:</p>
+          <ul class="how-it-works-list">
+            <li><strong>Core-Conviction positions (highest confidence):</strong> 15–25% per position if you own 4–6 core stocks; 25–35% if you own 2–3. These are your strongest thesis bets.</li>
+            <li><strong>Core-Ballast positions (stable):</strong> 10–15% per position. Quality compounders you trust to grow steadily.</li>
+            <li><strong>Satellite positions (medium conviction):</strong> 5–10% per position. Smaller bets on good companies you understand but are less certain about.</li>
+            <li><strong>Speculative positions (highest risk):</strong> 1–5% per position. Small experiments; one success can compound, but losses don't hurt the whole portfolio.</li>
+          </ul>
+          <p><strong>Key principle:</strong> The more positions you own, the smaller each one should be as a percentage. The fewer positions you own (because you've deeply researched them), the larger each can be.</p>
+        </div>
+
+        <div class="explanation-box">
+          <h3>Step 2: Calculate your tranche size</h3>
+          <p>A tranche is a measured portion you buy on a dip. The formula:</p>
+          <p style="text-align: center; font-weight: bold; margin: 1rem 0;">Dip % × Current Cost Basis = Tranche (capped at 20% of cost basis)</p>
+          <p>Example: Your $10K Core position drops 5%. Your tranche = 5% × $10K = $500. You can buy $500 more, but it can't push the total above your tier ceiling ($20K for Core-Conviction).</p>
+        </div>
+
+        <div class="explanation-box">
+          <h3>Step 3: Protect your cash floor</h3>
+          <p>Always keep at least 10% of your investable money in cash. Good dips happen several times a year. If you spend all your dry powder on the first dip, you won't have ammo for the next one.</p>
+        </div>
+
+        <div class="explanation-box">
+          <h3>Step 4: Watch out for deworsification</h3>
+          <p><strong>Deworsification is the silent killer of returns.</strong> It's what happens when you spread your money across too many positions, diluting each one until none of them matter anymore.</p>
+          <p>Charlie Munger (Warren Buffett's longtime business partner and one of the most respected investors of all time) argues for concentration—a smaller number of stocks you truly understand, not a huge list of mediocre bets. Each tranche should strengthen your position, not weaken it. If adding to a stock would push you way above your framework tier, that's a signal to stop buying and move on to another position.</p>
+          <p><strong>Red flag:</strong> If you own 15+ stocks, you probably own too many. If you can't articulate the thesis for each one in under 2 minutes, you're holding too much.</p>
+        </div>
+
+        <div class="explanation-box">
+          <h3>The complete workflow</h3>
+          <ol style="margin: 1rem 0 1rem 1.5rem; line-height: 1.8;">
+            <li>Stock drops. Run the Exceptions Checklist first (emotions high, decisions worst).</li>
+            <li>If you pass the checklist, calculate your tranche using the formula above.</li>
+            <li>Wait for afternoon (2–3 PM ET) to execute (better liquidity, clearer head).</li>
+            <li>After purchase, track the position and revisit when the next dip comes.</li>
+          </ol>
+        </div>
+
+        <button class="back-button" onclick="closeHowItWorks()">Back to Calculator</button>
+      </div>
+    </div>
+
+    <!-- DRY POWDER INFO MODAL -->
+    <div id="dry-powder-modal" class="modal" style="display: none;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Dry Powder: Why Cash Matters</h2>
+          <button class="modal-close" onclick="closeDryPowderInfo()">&times;</button>
+        </div>
+        
+        <div class="explanation-box">
+          <h3>The core principle</h3>
+          <p><strong>Dry powder</strong> is cash you've set aside for investing. It's your ammunition for when dips happen. Stock market dips occur regularly—3–5 times per year on average. If you spend all your cash on the first dip, you'll be defenseless for the next one.</p>
+        </div>
+
+        <div class="explanation-box">
+          <h3>The cash floor rule</h3>
+          <p><strong>Minimum:</strong> Keep at least 10% of your investable money in cash.</p>
+          <p><strong>Safety buffer:</strong> Never let a dip purchase drop you below 5% cash.</p>
+          <p><strong>Ideal:</strong> 10–20% cash gives you flexibility without sitting on unused money.</p>
+        </div>
+
+        <div class="explanation-box">
+          <h3>Example</h3>
+          <p>You have $50,000 to invest. Your 10% cash floor = $5,000. You should never spend more than $45,000 on positions. That way, if the market dips 20% tomorrow, you have $5,000 ready to buy more.</p>
+        </div>
+
+        <button class="back-button" onclick="closeDryPowderInfo()">Back to Checklist</button>
+      </div>
+    </div>
+
+    <!-- CONFIDENCE CHECK MODAL -->
+    <div id="confidence-modal" class="modal" style="display: none;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Check Your Conviction: The 12-Step Framework</h2>
+          <button class="modal-close" onclick="closeConfidenceCheck()">&times;</button>
+        </div>
+        
+        <div class="explanation-box">
+          <p><strong>Use this framework to validate your conviction in any company before buying the dip:</strong></p>
+          <ol style="margin: 1rem 0 1rem 1.5rem; line-height: 1.8; color: var(--color-text-secondary);">
+            <li><strong>Business description:</strong> Can you explain what the company does in 1–2 sentences?</li>
+            <li><strong>Tier classification:</strong> Is this Core, Satellite, or Speculative for you? <a href="#" onclick="scrollToHowItWorks(event)" class="dry-powder-link">How to size your stock positions</a></li>
+            <li><strong>Fundamentals (Gate 1):</strong> Revenue growing? Margins stable or expanding? Profitability sustainable?</li>
+            <li><strong>Moat:</strong> Does this company have a competitive advantage competitors can't easily copy?</li>
+            <li><strong>Failure modes:</strong> What could go wrong? Regulatory risk? Competitive pressure? Loss of key customers?</li>
+            <li><strong>Competitive positioning:</strong> How does it stack up against rivals? Market leader or also-ran?</li>
+            <li><strong>Management quality:</strong> Do the leaders have a track record of good decisions? Do they own significant stock?</li>
+            <li><strong>Valuation (Gate 2):</strong> Is the current price reasonable relative to earnings, growth, and risk?</li>
+            <li><strong>Thesis invalidation triggers:</strong> What specific changes would make you sell? (Not price—business changes.)</li>
+            <li><strong>Mental overhead:</strong> Can you track this position without constant monitoring?</li>
+            <li><strong>Scuttlebutt:</strong> What are customers, suppliers, and competitors saying about this company?</li>
+            <li><strong>Final verdict:</strong> Do you have strong conviction? Or doubts that a dip can't resolve?</li>
+          </ol>
+        </div>
+
+        <div class="explanation-box">
+          <p><strong>If the dip shook your conviction on ANY of these 12 steps, then it's not a buying opportunity—it's a warning sign.</strong></p>
+        </div>
+
+        <div style="text-align: center; margin: 2rem 0;">
+          <button class="check-results-button" style="background-color: var(--color-primary-blue);" onclick="openConfidenceTemplate(event)">AI Template: Answer These Questions</button>
+        </div>
+
+        <button class="back-button" onclick="closeConfidenceCheck()">Back to Checklist</button>
+      </div>
+    </div>
+
+    <!-- CONFIDENCE TEMPLATE MODAL -->
+    <div id="confidence-template-modal" class="modal" style="display: none;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>12-Step Analysis Prompt</h2>
+          <button class="modal-close" onclick="closeConfidenceTemplate()">&times;</button>
+        </div>
+        
+        <div class="explanation-box">
+          <p>Enter the company name or ticker below. We'll generate a prompt you can copy and paste into your favorite AI to get all 12 questions answered.</p>
+          <div style="margin: 1.5rem 0;">
+            <input type="text" id="template-ticker" placeholder="e.g., NVDA or Tesla" class="text-input" style="width: 100%; padding: 0.75rem; border: 1px solid var(--color-border); border-radius: 6px; font-size: 1rem;">
+            <button class="check-results-button" onclick="generateTemplate()" style="width: 100%; margin-top: 1rem;">Generate Prompt</button>
+          </div>
+        </div>
+
+        <div id="template-output" style="display: none;">
+          <div class="explanation-box">
+            <h3>Your 12-Step Analysis Prompt</h3>
+            <textarea id="template-prompt-text" readonly style="width: 100%; height: 400px; padding: 1rem; border: 1px solid var(--color-border); border-radius: 6px; font-family: monospace; font-size: 0.9rem; line-height: 1.6; background-color: #f9f8f5;"></textarea>
+            <button class="check-results-button" onclick="copyTemplateToClipboard()" style="width: 100%; margin-top: 1rem; background-color: var(--color-primary-green);">Copy to Clipboard</button>
+          </div>
+
+          <div class="explanation-box">
+            <h3>Or use directly in your AI:</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+              <button class="nav-link-btn" onclick="openInClaude()" style="padding: 1rem; font-weight: 600;">Open in Claude</button>
+              <button class="nav-link-btn" onclick="openInChatGPT()" style="padding: 1rem; font-weight: 600;">Open in ChatGPT</button>
+              <button class="nav-link-btn" onclick="openInGemini()" style="padding: 1rem; font-weight: 600;">Open in Gemini</button>
+              <button class="nav-link-btn" onclick="openInGrok()" style="padding: 1rem; font-weight: 600;">Open in Grok</button>
+            </div>
+            <p style="margin-top: 1rem; font-size: 0.85rem; color: var(--color-text-secondary);"><em>Note: These buttons will open each platform. Paste the prompt above into the chat to get started.</em></p>
+          </div>
+        </div>
+
+        <button class="back-button" onclick="closeConfidenceTemplate()">Close</button>
+      </div>
+    </div>
+
+    <!-- DEWORSIFICATION MODAL -->
+    <div id="deworsification-modal" class="modal" style="display: none;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Deworsification: How to Avoid It</h2>
+          <button class="modal-close" onclick="closeDeworsificationInfo()">&times;</button>
+        </div>
+        
+        <div class="explanation-box">
+          <h3>What is deworsification?</h3>
+          <p>Deworsification is spreading your money across too many positions, diluting each one until none of them matter. You end up with a bloated portfolio of mediocre bets instead of a focused set of high-conviction positions.</p>
+        </div>
+
+        <div class="explanation-box">
+          <h3>The problem with too many positions</h3>
+          <ul class="how-it-works-list">
+            <li>You can't track all of them effectively (mental overhead)</li>
+            <li>No position is large enough to meaningfully impact returns</li>
+            <li>You lose focus on your best ideas</li>
+            <li>Small positions become "noise" in your portfolio</li>
+          </ul>
+        </div>
+
+        <div class="explanation-box">
+          <h3>The framework solution</h3>
+          <p><strong>Stick to your tier sizes:</strong></p>
+          <ul class="how-it-works-list">
+            <li>Core-Conviction: 15–25% per position</li>
+            <li>Core-Ballast: 10–15% per position</li>
+            <li>Satellite: 5–10% per position</li>
+            <li>Speculative: 1–5% per position</li>
+          </ul>
+          <p>If a dip tranche would push a position way above its tier, skip the dip. Move on to another position or wait for the next opportunity.</p>
+        </div>
+
+        <div class="explanation-box">
+          <h3>Red flags</h3>
+          <p>If you own 15+ stocks, you probably own too many. If you can't explain your thesis for each position in under 2 minutes, you're holding too much.</p>
+        </div>
+
+        <button class="back-button" onclick="closeDeworsificationInfo()">Back to Checklist</button>
+      </div>
+    </div>
+
+    <!-- CALCULATOR SECTION -->
     <section id="calculator" class="calculator-section">
-      <h2>The Calculator</h2>
       
       <div id="calculator-content" style="display: none;">
       
-      <div class="question-block">
-        <h3>What brings you here today?</h3>
-        <div class="radio-group">
-          <label class="radio-label">
-            <input type="radio" name="account-type" value="real" onchange="setAccountType('real')">
-            <span>I'm investing real money</span>
-          </label>
-          <label class="radio-label">
-            <input type="radio" name="account-type" value="practice" onchange="setAccountType('practice')">
-            <span>I'm practicing / building a watchlist</span>
-          </label>
-          <label class="radio-label">
-            <input type="radio" name="account-type" value="unsure" onchange="setAccountType('unsure')">
-            <span>I'm not sure yet</span>
-          </label>
-        </div>
-      </div>
-
-      <div id="level-section" style="display: none;">
         <div class="question-block">
-          <h3>Choose your experience level</h3>
+          <h3>What brings you here today?</h3>
           <div class="radio-group">
             <label class="radio-label">
-              <input type="radio" name="level" value="beginner" onchange="setLevel('beginner')">
-              <span>Beginner (new to stock picking)</span>
+              <input type="radio" name="account-type" value="real" onchange="setAccountType('real')">
+              <span>I'm investing real money</span>
             </label>
             <label class="radio-label">
-              <input type="radio" name="level" value="experienced" onchange="setLevel('experienced')">
-              <span>Experienced (I know what I'm doing)</span>
+              <input type="radio" name="account-type" value="practice" onchange="setAccountType('practice')">
+              <span>I'm practicing / building a watchlist</span>
+            </label>
+            <label class="radio-label">
+              <input type="radio" name="account-type" value="unsure" onchange="setAccountType('unsure')">
+              <span>I'm not sure yet</span>
             </label>
           </div>
         </div>
 
-        <div id="beginner-questions" style="display: none;">
+        <div id="level-section" style="display: none;">
           <div class="question-block">
-            <h3>What stock are you looking at?</h3>
-            <input type="text" id="stock-name" placeholder="e.g., NVDA, CRWD, AMZN" class="text-input" onchange="updateCalc()">
-          </div>
-
-          <div class="question-block">
-            <h3>How many stocks do you currently own?</h3>
-            <input type="number" id="stock-count" min="0" placeholder="0" class="number-input" onchange="updateStockCount()">
-            <div id="stock-count-guidance" class="guidance-box"></div>
-          </div>
-
-          <div class="question-block">
-            <h3>Are you adding to an existing position or buying a new stock?</h3>
+            <h3>Choose your experience level</h3>
             <div class="radio-group">
               <label class="radio-label">
-                <input type="radio" name="position-type" value="existing" onchange="updateCalc()">
-                <span>Adding to existing</span>
+                <input type="radio" name="level" value="beginner" onchange="setLevel('beginner')">
+                <span>Beginner (new to stock picking)</span>
               </label>
               <label class="radio-label">
-                <input type="radio" name="position-type" value="new" onchange="updateCalc()">
-                <span>Buying new</span>
+                <input type="radio" name="level" value="experienced" onchange="setLevel('experienced')">
+                <span>Experienced (I know what I'm doing)</span>
               </label>
             </div>
           </div>
 
-          <div class="question-block">
-            <h3>What's the total amount you have available to spend right now?</h3>
-            <div class="input-group">
-              <span class="currency-symbol">$</span>
-              <input type="number" id="available-money" min="0" placeholder="500" class="number-input" onchange="updateCalc()">
+          <div id="beginner-questions" style="display: none;">
+            <div class="question-block">
+              <h3>What stock are you looking at?</h3>
+              <input type="text" id="stock-name" placeholder="e.g., NVDA, CRWD, AMZN" class="text-input" onchange="updateCalc()">
+              <p class="definition-text">Optional — helps you keep track, doesn't affect the calculation.</p>
             </div>
-            <p class="definition-text"><strong>Available to spend:</strong> Cash you've set aside for investing that you're not currently using. Think of it as your "dry powder"—money kept in reserve.</p>
+
+            <div class="question-block">
+              <h3>How many stocks do you currently own?</h3>
+              <input type="number" id="stock-count" min="0" placeholder="3" class="number-input" onchange="updateStockCount()">
+              <div id="stock-count-guidance" class="guidance-box"></div>
+            </div>
+
+            <div class="question-block">
+              <h3>Are you adding to an existing position or buying a new stock?</h3>
+              <div class="radio-group">
+                <label class="radio-label">
+                  <input type="radio" name="position-type" value="existing" onchange="updateCalc()">
+                  <span>Adding to existing</span>
+                </label>
+                <label class="radio-label">
+                  <input type="radio" name="position-type" value="new" onchange="updateCalc()">
+                  <span>Buying new</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="question-block">
+              <h3>What's the total amount you have available to spend right now?</h3>
+              <div class="input-group">
+                <span class="currency-symbol">$</span>
+                <input type="number" id="available-money" min="0" placeholder="400" class="number-input" onchange="updateCalc()">
+              </div>
+              <p class="definition-text"><strong>Dry powder:</strong> Cash you've set aside for investing that you're not currently using. <a href="#" onclick="openDryPowderInfo(event)" class="dry-powder-link">Learn why it matters</a></p>
+            </div>
+
+            <div class="question-block">
+              <h3>What percentage did the stock drop?</h3>
+              <div class="input-group">
+                <input type="number" id="dip-percent-beginner" min="0" max="100" step="0.1" placeholder="5" class="number-input" onchange="updateCalc()">
+                <span class="percent-symbol">%</span>
+              </div>
+              <p class="example-text">Example: If you bought at $100 and it's now at $95, that's a 5% drop.</p>
+            </div>
+
+            <div class="question-block">
+              <h3>What's the most you'd want to spend on one stock?</h3>
+              <div class="input-group">
+                <span class="currency-symbol">$</span>
+                <input type="number" id="max-position-beginner" min="0" placeholder="800" class="number-input" onchange="updateCalc()">
+              </div>
+              <p class="definition-text"><strong>Max position size:</strong> The largest dollar amount you'd put into one company. <a href="#" onclick="openConfidenceCheck(event)" class="dry-powder-link">Tier sizing guide</a></p>
+            </div>
+
+            <button class="reset-button" onclick="resetBeginner()">Reset calculator</button>
           </div>
 
-          <div class="question-block">
-            <h3>What percentage did the stock drop?</h3>
-            <div class="input-group">
-              <input type="number" id="dip-percent-beginner" min="0" max="100" step="0.1" placeholder="6" class="number-input" onchange="updateCalc()">
-              <span class="percent-symbol">%</span>
+          <div id="experienced-questions" style="display: none;">
+            <div class="question-block">
+              <h3>What stock are you looking at?</h3>
+              <input type="text" id="stock-name-exp" placeholder="e.g., NVDA" class="text-input" onchange="updateCalc()">
+              <p class="definition-text">Optional — helps you keep track, doesn't affect the calculation.</p>
             </div>
-            <p class="example-text">Example: If you bought at $100 and it's now at $94, that's a 6% drop.</p>
-          </div>
 
-          <div class="question-block">
-            <h3>What's the most you'd want to spend on one stock?</h3>
-            <div class="input-group">
-              <span class="currency-symbol">$</span>
-              <input type="number" id="max-position-beginner" min="0" placeholder="3000" class="number-input" onchange="updateCalc()">
+            <div class="question-block">
+              <h3>Current cost basis ($)</h3>
+              <div class="input-group">
+                <span class="currency-symbol">$</span>
+                <input type="number" id="cost-basis-exp" min="0" placeholder="3000" class="number-input" onchange="updateCalc()">
+              </div>
+              <p class="definition-text"><strong>Cost basis:</strong> Total amount of money you've spent on this position so far.</p>
             </div>
-            <p class="definition-text"><strong>Max position size:</strong> Your comfort level for one stock. Example: "I never want more than 20% of my portfolio in one company."</p>
-          </div>
-          <button class="reset-button" onclick="resetBeginner()">Reset calculator</button>
-        </div>
 
-        <div id="experienced-questions" style="display: none;">
-          <div class="question-block">
-            <h3>What stock are you looking at?</h3>
-            <input type="text" id="stock-name-exp" placeholder="e.g., NVDA" class="text-input" onchange="updateCalc()">
-          </div>
+            <div class="question-block">
+              <h3>Dip percentage (%)</h3>
+              <div class="input-group">
+                <input type="number" id="dip-percent-exp" min="0" max="100" step="0.1" placeholder="5" class="number-input" onchange="updateCalc()">
+                <span class="percent-symbol">%</span>
+              </div>
+            </div>
 
-          <div class="question-block">
-            <h3>Current cost basis ($)</h3>
-            <div class="input-group">
-              <span class="currency-symbol">$</span>
-              <input type="number" id="cost-basis-exp" min="0" placeholder="8500" class="number-input" onchange="updateCalc()">
+            <div class="question-block">
+              <h3>Dry powder ($)</h3>
+              <div class="input-group">
+                <span class="currency-symbol">$</span>
+                <input type="number" id="dry-powder-exp" min="0" placeholder="10000" class="number-input" onchange="updateCalc()">
+              </div>
+              <p class="definition-text"><strong>Dry powder:</strong> Cash you have set aside for investing. <a href="#" onclick="openDryPowderInfo(event)" class="dry-powder-link">Best practices</a></p>
             </div>
-            <p class="definition-text"><strong>Cost basis:</strong> Total amount of money you've spent on this position so far.</p>
-          </div>
 
-          <div class="question-block">
-            <h3>Dip percentage (%)</h3>
-            <div class="input-group">
-              <input type="number" id="dip-percent-exp" min="0" max="100" step="0.1" placeholder="6" class="number-input" onchange="updateCalc()">
-              <span class="percent-symbol">%</span>
+            <div class="question-block">
+              <h3>Max position size ($)</h3>
+              <div class="input-group">
+                <span class="currency-symbol">$</span>
+                <input type="number" id="max-position-exp" min="0" placeholder="5000" class="number-input" onchange="updateCalc()">
+              </div>
             </div>
-          </div>
 
-          <div class="question-block">
-            <h3>Dry powder ($)</h3>
-            <div class="input-group">
-              <span class="currency-symbol">$</span>
-              <input type="number" id="dry-powder-exp" min="0" placeholder="5000" class="number-input" onchange="updateCalc()">
-            </div>
-            <p class="definition-text"><strong>Dry powder:</strong> Cash you have set aside that's not currently in positions.</p>
+            <button class="reset-button" onclick="resetExperienced()">Reset calculator</button>
           </div>
-
-          <div class="question-block">
-            <h3>Max position size ($)</h3>
-            <div class="input-group">
-              <span class="currency-symbol">$</span>
-              <input type="number" id="max-position-exp" min="0" placeholder="20000" class="number-input" onchange="updateCalc()">
-            </div>
-          </div>
-
-          <div class="question-block">
-            <h3>Exception checklist</h3>
-            <p class="definition-text">Any of these triggered? Framework says to review before executing.</p>
-            <div class="exception-list">
-              <button class="exception-btn" onclick="toggleException(1)">No</button>
-              <span class="exception-label">Still falling (more than 10% in last 5 days)</span>
-            </div>
-            <div class="exception-list">
-              <button class="exception-btn" onclick="toggleException(2)">No</button>
-              <span class="exception-label">Earnings within 5 days (need thesis doc)</span>
-            </div>
-            <div class="exception-list">
-              <button class="exception-btn" onclick="toggleException(3)">No</button>
-              <span class="exception-label">Conviction dropped after news</span>
-            </div>
-            <div class="exception-list">
-              <button class="exception-btn" onclick="toggleException(4)">No</button>
-              <span class="exception-label">Insider selling observed</span>
-            </div>
-            <div class="exception-list">
-              <button class="exception-btn" onclick="toggleException(5)">No</button>
-              <span class="exception-label">4+ tranches this month already</span>
-            </div>
-            <div class="exception-list">
-              <button class="exception-btn" onclick="toggleException(6)">No</button>
-              <span class="exception-label">Dry powder would drop below 10%</span>
-            </div>
-          </div>
-          <button class="reset-button" onclick="resetExperienced()">Reset calculator</button>
         </div>
       </div>
 
       <div id="unsure-message" style="display: none;" class="info-box">
-        <p>No problem! Start by exploring the explanations below. Come back when you're ready to practice or invest.</p>
+        <p>No problem! Start by exploring the sections above. Come back when you're ready to practice or invest.</p>
+      </div>
+
+      <div id="check-results-section" style="display: none;" class="check-results-section">
+        <button class="check-results-button" onclick="showResults()">Check Results</button>
       </div>
 
       <div id="result-card" class="result-card" style="display: none;">
@@ -201,20 +501,8 @@
       </div>
     </section>
 
-    <section class="explanation-section">
-      <h2>How it works</h2>
-
-      <div class="explanation-box">
-        <h3>How we calculate tranche size</h3>
-        <p>The calculator starts with position sizing — how much of your total portfolio should go into one stock. This depends on how many stocks you own: 1 stock (30–50%), 2–3 stocks (15–30% each), 4+ stocks (10–20% each).</p>
-        <p>Once you know your max position size, the tranche formula kicks in: Dip percentage × Money you have to spend = Tranche size. We cap it at 20% of the position's current cost. The tranche—a measured portion you buy on each dip—can't push your total position above your personal maximum.</p>
-      </div>
-
-      <div class="explanation-box">
-        <h3>What is deworsification?</h3>
-        <p>Diversification is smart, but over-diversification is 'deworsification'—you end up with more positions than you can properly track, diluting your returns. (This term was coined by Charlie Munger, a famous investor and Warren Buffett's longtime business partner at Berkshire Hathaway). Munger calls for a concentration of individual stock positions you really understand rather than have a lot of different positions for the sake of having a lot of different positions. Before you invest in any company, you need to have a strong thesis, or reasoning, behind investing in the company. The company needs to be one you really understand. Also, it should be one you can keep up with as events and changes happen that could alter your thesis about it.</p>
-      </div>
-
+    <!-- BOTTOM SECTION (Always visible) -->
+    <section class="footer-section">
       <div class="explanation-box">
         <h3>This is a framework, not advice</h3>
         <p>This calculator is educational only. It shows you one approach to thinking about position sizing. You make the final decision. Always run your own analysis, understand your thesis, and only invest money you can afford to lose.</p>
